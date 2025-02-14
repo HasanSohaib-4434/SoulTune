@@ -5,9 +5,22 @@ import numpy as np
 from transformers import pipeline
 import tempfile
 import os
-import imageio_ffmpeg
+ffmpeg_path = "/app/.ffmpeg/ffmpeg"
+if not os.path.exists(ffmpeg_path):
+    st.write("Downloading ffmpeg...")
+    subprocess.run([
+        "wget", "-q", "-O", "ffmpeg.tar.xz",
+        "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"
+    ])
+    subprocess.run(["tar", "xf", "ffmpeg.tar.xz"])
+    os.makedirs("/app/.ffmpeg", exist_ok=True)
+    os.rename("ffmpeg-release-amd64-static", "/app/.ffmpeg")
+    st.write("ffmpeg installed!")
 
-os.environ["PATH"] += os.pathsep + imageio_ffmpeg.get_ffmpeg_directory()
+os.environ["PATH"] += os.pathsep + os.path.abspath("/app/.ffmpeg")
+
+ffmpeg_installed = subprocess.run(["ffmpeg", "-version"], capture_output=True, text=True)
+st.text(ffmpeg_installed.stdout)  
 
 
 model = whisper.load_model("tiny")
