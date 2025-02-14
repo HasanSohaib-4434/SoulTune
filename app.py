@@ -5,6 +5,10 @@ import numpy as np
 from transformers import pipeline
 import tempfile
 import os
+import imageio_ffmpeg
+
+os.environ["PATH"] += os.pathsep + imageio_ffmpeg.get_ffmpeg_directory()
+
 
 model = whisper.load_model("tiny")
 
