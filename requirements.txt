@@ -2,5 +2,5 @@ streamlit
 whisper
 transformers
 torch==2.2.0
-numpy
+numpy==1.21.6
 ffmpeg
