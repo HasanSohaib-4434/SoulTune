@@ -7,5 +7,4 @@ pydub
 soundfile
 sentence-transformers
 plotly
-ffmpeg-python
-imageio[ffmpeg]
+librosa
