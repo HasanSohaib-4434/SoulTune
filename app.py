@@ -15,6 +15,22 @@ with open('verse.json', 'r', encoding='utf-8') as file:
 
 emotion_analyzer = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
 
+from pydub import AudioSegment
+
+def convert_to_wav(input_file, output_file):
+    audio = AudioSegment.from_file(input_file, format="m4a")
+    audio.export(output_file, format="wav")
+
+if uploaded_file:
+    temp_input = "temp_audio_file.m4a"
+    with open(temp_input, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+
+    temp_output = "temp_audio_file.wav"
+    convert_to_wav(temp_input, temp_output)
+
+    result = model.transcribe(temp_output)
+
 def analyze_emotion(text):
     result = emotion_analyzer(text)
     emotion_scores = {score['label']: score['score'] for score in result[0]}
