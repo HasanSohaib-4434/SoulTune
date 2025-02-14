@@ -2,26 +2,8 @@ import streamlit as st
 import whisper
 import json
 import numpy as np
+import librosa
 from transformers import pipeline
-import tempfile
-import os
-ffmpeg_path = "/app/.ffmpeg/ffmpeg"
-if not os.path.exists(ffmpeg_path):
-    st.write("Downloading ffmpeg...")
-    subprocess.run([
-        "wget", "-q", "-O", "ffmpeg.tar.xz",
-        "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"
-    ])
-    subprocess.run(["tar", "xf", "ffmpeg.tar.xz"])
-    os.makedirs("/app/.ffmpeg", exist_ok=True)
-    os.rename("ffmpeg-release-amd64-static", "/app/.ffmpeg")
-    st.write("ffmpeg installed!")
-
-os.environ["PATH"] += os.pathsep + os.path.abspath("/app/.ffmpeg")
-
-ffmpeg_installed = subprocess.run(["ffmpeg", "-version"], capture_output=True, text=True)
-st.text(ffmpeg_installed.stdout)  
-
 
 model = whisper.load_model("tiny")
 
@@ -36,8 +18,7 @@ emotion_analyzer = pipeline("text-classification", model="j-hartmann/emotion-eng
 def analyze_emotion(text):
     result = emotion_analyzer(text)
     emotion_scores = {score['label']: score['score'] for score in result[0]}
-    emotion = max(emotion_scores, key=emotion_scores.get)
-    return emotion
+    return max(emotion_scores, key=emotion_scores.get)
 
 def get_duas(emotion):
     return dua_data.get(emotion, [])
@@ -45,19 +26,24 @@ def get_duas(emotion):
 def get_quranic_verses(emotion):
     return quranic_verses.get(emotion, [])
 
+def load_audio_librosa(file_path):
+    audio, sr = librosa.load(file_path, sr=16000)
+    return np.array(audio, dtype=np.float32)
+
 st.title("Emotion-based Dua and Quranic Verse Suggestion")
 
 st.markdown("### Upload your audio file (MP3 or WAV):")
-
 uploaded_file = st.file_uploader("Upload your audio file", type=["mp3", "wav"])
 
 if uploaded_file:
-    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-        temp_file.write(uploaded_file.getbuffer())
-        temp_file_path = temp_file.name
+    temp_file_path = "temp_audio_file.wav"
+    with open(temp_file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
 
-    result = model.transcribe(temp_file_path)
+    audio_data = load_audio_librosa(temp_file_path)
+    result = model.transcribe(audio_data)
     text = result["text"]
+
     st.markdown(f"#### Transcribed Text:")
     st.text_area("", text, height=150)
 
@@ -91,6 +77,3 @@ if uploaded_file:
             )
     else:
         st.write("No Quranic verses available for this emotion.")
-
-    # Cleanup: Delete the temporary file after use
-    os.remove(temp_file_path)
