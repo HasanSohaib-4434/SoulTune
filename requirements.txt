@@ -1,5 +1,6 @@
 streamlit
-openai-whisper
+whisper
 transformers
-torch
+torch==1.13.1
 numpy
+ffmpeg
