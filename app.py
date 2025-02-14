@@ -3,7 +3,6 @@ import whisper
 import json
 import numpy as np
 import librosa
-import soundfile as sf
 from transformers import pipeline
 
 model = whisper.load_model("tiny")
@@ -33,20 +32,13 @@ def load_audio_librosa(file_path):
 
 st.title("Emotion-based Dua and Quranic Verse Suggestion")
 
-st.markdown("### Upload your audio file (M4A, MP3, WAV):")
-uploaded_file = st.file_uploader("Upload your audio file", type=["m4a", "mp3", "wav"])
+st.markdown("### Upload your audio file (MP3 or WAV):")
+uploaded_file = st.file_uploader("Upload your audio file", type=["mp3", "wav"])
 
 if uploaded_file:
-    temp_file_path = f"temp_audio_file.{uploaded_file.name.split('.')[-1]}"
-    
+    temp_file_path = "temp_audio_file.wav"
     with open(temp_file_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
-
-    if temp_file_path.endswith(("m4a", "mp3")):
-        audio_data, sr = librosa.load(temp_file_path, sr=16000)
-        temp_wav_path = "converted_audio.wav"
-        sf.write(temp_wav_path, audio_data, sr)
-        temp_file_path = temp_wav_path
 
     audio_data = load_audio_librosa(temp_file_path)
     result = model.transcribe(audio_data)
