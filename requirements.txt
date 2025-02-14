@@ -1,6 +1,6 @@
 streamlit
-whisper
-transformers
+openai-whisper
 torch==2.2.0
 numpy==1.21.6
+numba
 ffmpeg
