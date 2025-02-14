@@ -3,7 +3,7 @@ import whisper
 import json
 import numpy as np
 from transformers import pipeline
-import os
+import io
 
 model = whisper.load_model("tiny")
 
@@ -34,10 +34,9 @@ st.markdown("### Upload your audio file (MP3 or WAV):")
 uploaded_file = st.file_uploader("Upload your audio file", type=["mp3", "wav"])
 
 if uploaded_file:
-    with open("temp_audio_file.wav", "wb") as f:
-        f.write(uploaded_file.getbuffer())
-
-    result = model.transcribe("temp_audio_file.wav")
+    audio_data = uploaded_file.read()
+    audio_file = io.BytesIO(audio_data)
+    result = model.transcribe(audio_file)
     text = result["text"]
     st.markdown(f"#### Transcribed Text:")
     st.text_area("", text, height=150)
