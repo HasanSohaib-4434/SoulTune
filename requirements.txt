@@ -1,8 +1,9 @@
-numpy==2.1
-numba
-streamlit
-openai-whisper
+numpy<2
+torch
 transformers
-torch==2.2.0
-ffmpeg
-
+whisper
+streamlit
+pydub
+soundfile
+sentence-transformers
+plotly
