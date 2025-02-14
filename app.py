@@ -3,6 +3,7 @@ import whisper
 import json
 import numpy as np
 import librosa
+import soundfile as sf
 from transformers import pipeline
 
 model = whisper.load_model("tiny")
@@ -14,22 +15,6 @@ with open('verse.json', 'r', encoding='utf-8') as file:
     quranic_verses = json.load(file)
 
 emotion_analyzer = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
-
-from pydub import AudioSegment
-
-def convert_to_wav(input_file, output_file):
-    audio = AudioSegment.from_file(input_file, format="m4a")
-    audio.export(output_file, format="wav")
-
-if uploaded_file:
-    temp_input = "temp_audio_file.m4a"
-    with open(temp_input, "wb") as f:
-        f.write(uploaded_file.getbuffer())
-
-    temp_output = "temp_audio_file.wav"
-    convert_to_wav(temp_input, temp_output)
-
-    result = model.transcribe(temp_output)
 
 def analyze_emotion(text):
     result = emotion_analyzer(text)
@@ -48,13 +33,20 @@ def load_audio_librosa(file_path):
 
 st.title("Emotion-based Dua and Quranic Verse Suggestion")
 
-st.markdown("### Upload your audio file (MP3 or WAV):")
-uploaded_file = st.file_uploader("Upload your audio file", type=["mp3", "wav"])
+st.markdown("### Upload your audio file (M4A, MP3, WAV):")
+uploaded_file = st.file_uploader("Upload your audio file", type=["m4a", "mp3", "wav"])
 
 if uploaded_file:
-    temp_file_path = "temp_audio_file.wav"
+    temp_file_path = f"temp_audio_file.{uploaded_file.name.split('.')[-1]}"
+    
     with open(temp_file_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
+
+    if temp_file_path.endswith(("m4a", "mp3")):
+        audio_data, sr = librosa.load(temp_file_path, sr=16000)
+        temp_wav_path = "converted_audio.wav"
+        sf.write(temp_wav_path, audio_data, sr)
+        temp_file_path = temp_wav_path
 
     audio_data = load_audio_librosa(temp_file_path)
     result = model.transcribe(audio_data)
