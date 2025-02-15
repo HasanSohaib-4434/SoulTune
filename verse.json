@@ -83,5 +83,17 @@
       "urdu": "یقیناً اللہ ان لوگوں کو پسند کرتا ہے جو اُس کی راہ میں لڑتے ہیں",
       "english": "Indeed, Allah loves those who fight in His way."
     }
+  ],
+  "neutral": [
+    {
+      "verse": "لِكُلِّ أُمَّةٍ أَجَلٌ ۖ فَإِذَا جَاءَ أَجَلُهُمْ لَا يَسْتَأْخِرُونَ سَاعَةً وَلَا يَسْتَقْدِمُونَ",
+      "urdu": "ہر امت کے لیے ایک مقررہ وقت ہوتا ہے، جب ان کا وقت آ جاتا ہے تو وہ نہ ایک گھڑی پیچھے ہوتے ہیں اور نہ آگے بڑھ سکتے ہیں",
+      "english": "For every nation is a specified term. When their time has come, they will not delay it by a single hour, nor will they advance it."
+    },
+    {
+      "verse": "وَتِلْكَ الْأَيَّامُ نُدَاوِلُهَا بَيْنَ النَّاسِ",
+      "urdu": "اور یہ دن ہم لوگوں کے درمیان گردش دیتے رہتے ہیں",
+      "english": "And these days [of varying conditions] We alternate among the people."
+    }
   ]
 }
