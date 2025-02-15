@@ -187,5 +187,17 @@
       "urdu": "اللہ ہمیں آپ کی محبت میں ایک دوسرے سے محبت کرنے والا بنائے",
       "english": "O Allah, make us among those who love each other for Your sake."
     }
+  ],
+  "neutral": [
+    {
+      "dua": "اللهم اهدني وسددني",
+      "urdu": "اے اللہ! مجھے ہدایت دے اور مجھے درست کر",
+      "english": "O Allah, guide me and keep me steadfast."
+    },
+    {
+      "dua": "اللهم اجعلني من الصابرين",
+      "urdu": "اے اللہ! مجھے صبر کرنے والوں میں شامل فرما",
+      "english": "O Allah, make me among the patient ones."
+    }
   ]
 }
